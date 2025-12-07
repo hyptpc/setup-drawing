@@ -6,7 +6,9 @@ import pshelper as ps
 #______________________________________________________________________________
 def main():
   ps.initialize(experiment=72)
-  misc.draw_scale()
+  misc.draw_scale(with_tic=False)
+  misc.draw_ff()
+
   print("newpath")
   print("0 0 moveto")
   print("300 0 lineto")

@@ -6,15 +6,6 @@ import config as cfg
 
 #______________________________________________________________________________
 @contextmanager
-def saved_state():
-  print("gsave")
-  try:
-    yield
-  finally:
-    print("grestore")
-
-#______________________________________________________________________________
-@contextmanager
 def transform(x=0, y=0, angle=0):
   print("gsave")
   if x != 0 or y != 0:
@@ -49,6 +40,21 @@ def define_length():
         ' mul } def')
   print('/m { ' + f'{100*cfg.cm_to_point*cfg.scale_factor}' +
         ' mul } def')
+
+#______________________________________________________________________________
+def draw_circle(r, color):
+  with transform():
+    path_circle(r)
+    fill(color)
+    stroke()
+
+#______________________________________________________________________________
+def fill(color):
+  if color is None:
+    return
+  with transform():
+    set_color(color)
+    print('fill')
 
 #______________________________________________________________________________
 def grestore():
@@ -103,6 +109,11 @@ def move_to_rtheta(r, theta):
 #______________________________________________________________________________
 def newpath():
   print('newpath')
+
+#______________________________________________________________________________
+def path_circle(r):
+  newpath()
+  print(f'0 0 {r} mm 0 360 arc')
 
 #______________________________________________________________________________
 def rotate(degree):
@@ -160,7 +171,7 @@ def draw_text(text, angle, align):
    10: center align, y lower
    -1: right align
   '''
-  with saved_state():
+  with transform():
     move_to_xy(0, 0)
     rotate(-cfg.global_rotation_angle + angle)
     if align == 1:
