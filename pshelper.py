@@ -31,6 +31,9 @@ def define_command():
         'pathbbox 4 1 roll pop pop pop grestore } def')
   print('/stringbottom { gsave newpath 0 0 moveto false charpath ' +
         'flattenpath pathbbox pop pop exch pop grestore } def')
+  if not cfg.rgb_color:
+    print('/setrgbcolor { /b exch def /g exch def /r exch def ' +
+          'r 0.30 mul g 0.59 mul add b 0.11 mul add setgray } bind def')
 
 #______________________________________________________________________________
 def define_length():
@@ -42,11 +45,49 @@ def define_length():
         ' mul } def')
 
 #______________________________________________________________________________
+def draw_box(x, z, color):
+  with transform():
+    path_box(0, 0, x, z)
+    fill(color)
+    stroke()
+
+#______________________________________________________________________________
 def draw_circle(r, color):
   with transform():
     path_circle(r)
     fill(color)
     stroke()
+
+#______________________________________________________________________________
+def draw_polygon(x, y, color):
+  with transform():
+    path_polygon(0, 0, x, y)
+    fill(color)
+    stroke()
+
+#______________________________________________________________________________
+def draw_text(text, angle, align):
+  '''
+  Align:
+    1: left align
+    0: center align, y higher
+   10: center align, y lower
+   -1: right align
+  '''
+  with transform():
+    move_to_xy(0, 0)
+    rotate(-cfg.global_rotation_angle + angle)
+    if align == 1:
+      print(f'({text}) (A) stringtop 2.0 div neg 0. exch rmoveto show')
+    elif align == -1:
+      print(f'({text}) dup stringwidth pop neg' +
+            f'(A) stringtop 2.0 div neg rmoveto show')
+    elif align == 0:
+      print(f'({text}) dup stringwidth pop 2.0 div neg' +
+            f'(A) stringbottom neg rmoveto show')
+    elif align == 10:
+      print(f'({text}) dup stringwidth pop 2.0 div neg' +
+            f'(A) stringtop neg rmoveto show')
 
 #______________________________________________________________________________
 def fill(color):
@@ -55,6 +96,11 @@ def fill(color):
   with transform():
     set_color(color)
     print('fill')
+
+#______________________________________________________________________________
+def finalize():
+  print("showpage")
+  print("%%EOF")
 
 #______________________________________________________________________________
 def grestore():
@@ -88,10 +134,15 @@ def initialize(experiment):
   translate_xy(cfg.paper_width / cfg.scale_factor / 2,
                cfg.paper_height / cfg.scale_factor / 2)
   rotate(cfg.global_rotation_angle)
-  set_line_style(cfg.line_width, cfg.color_black)
+  set_line_style()
 
 #______________________________________________________________________________
-def line_to_xy(x, y):
+def line_to_xy(x, y, width=None, color=None, dash=None):
+  if width is not None or color is not None or dash is not None:
+    width = cfg.line_width if width is None else width
+    color = cfg.color_black if color is None else color
+    dash = [] if dash is None else dash
+    set_line_style(width, color, dash)
   print(f'{x} mm {y} mm lineto')
 
 #______________________________________________________________________________
@@ -111,9 +162,33 @@ def newpath():
   print('newpath')
 
 #______________________________________________________________________________
+def path_box(x_center, z_center, x, z):
+  translate_xy(x_center, z_center)
+  newpath()
+  move_to_xy(-x, -z)
+  line_to_xy( x, -z)
+  line_to_xy( x,  z)
+  line_to_xy(-x,  z)
+  closepath()
+  translate_xy(-x_center, -z_center)
+
+#______________________________________________________________________________
 def path_circle(r):
   newpath()
   print(f'0 0 {r} mm 0 360 arc')
+
+#______________________________________________________________________________
+def path_polygon(x_center, y_center, x_list, y_list):
+  if len(x_list) == 0 or len(y_list) == 0 or len(x_list) != len(y_list):
+    return
+  translate_xy(x_center, y_center)
+  newpath()
+  for i in range(len(x_list)):
+    if i == 0:
+      move_to_xy(x_list[0], y_list[0])
+    line_to_xy(x_list[i], y_list[i])
+  closepath()
+  translate_xy(-x_center, -y_center)
 
 #______________________________________________________________________________
 def rotate(degree):
@@ -153,38 +228,17 @@ def set_font(font=cfg.font, font_size=cfg.font_size):
   print(f'{font} findfont {font_size} scalefont setfont')
 
 #______________________________________________________________________________
-def set_line_style(width, color):
+def set_line_style(width=cfg.line_width, color=cfg.color_black, dash=[]):
   if color < 0 or color is None:
     color = 1.0 # black
   print(f'{width} mm setlinewidth {color} setgray')
+  dash_str = '[' + ' '.join(str(d) for d in dash) + ']'
+  print(f'{dash_str} 0 setdash')
 
 #______________________________________________________________________________
 def stroke():
   print('stroke')
-
-#______________________________________________________________________________
-def draw_text(text, angle, align):
-  '''
-  Align:
-    1: left align
-    0: center align, y higher
-   10: center align, y lower
-   -1: right align
-  '''
-  with transform():
-    move_to_xy(0, 0)
-    rotate(-cfg.global_rotation_angle + angle)
-    if align == 1:
-      print(f'({text}) (A) stringtop 2.0 div neg 0. exch rmoveto show')
-    elif align == -1:
-      print(f'({text}) dup stringwidth pop neg' +
-            f'(A) stringtop 2.0 div neg rmoveto show')
-    elif align == 0:
-      print(f'({text}) dup stringwidth pop 2.0 div neg' +
-            f'(A) stringbottom neg rmoveto show')
-    elif align == 10:
-      print(f'({text}) dup stringwidth pop 2.0 div neg' +
-            f'(A) stringtop neg rmoveto show')
+  set_line_style()
 
 #______________________________________________________________________________
 def translate_xy(x, y):

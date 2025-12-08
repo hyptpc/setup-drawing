@@ -13,7 +13,13 @@ font = '/ArialMT'
 # font = '/Arial-ItaricMT'
 font_size = 14
 
+rgb_color = True
 color_black = 0
 color_white = 1
+color_gray = 0.5
+color_light_gray = 0.8
+color_light_cyan = -216242255 # LH2
+color_light_pink = -255182193 # SHS
+color_light_yellow = -255255224 # HypTPC
 
 line_width = 5

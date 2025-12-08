@@ -1,7 +1,21 @@
 import math
 
 import config as cfg
+import geomhelper as geom
 import pshelper as ps
+
+#______________________________________________________________________________
+def draw_zaxis():
+  ps.comment('Z axis')
+  with ps.transform():
+    x, y = geom.ff_to_xy(-2000)
+    ps.move_to_xy(0, 0)
+    ps.line_to_xy(x, y, dash=[10, 5])
+    ps.stroke()
+    x, y = geom.ff_to_xy(9000)
+    ps.move_to_xy(0, 0)
+    ps.line_to_xy(x, y, dash=[10, 5])
+    ps.stroke()
 
 #______________________________________________________________________________
 def draw_ff():

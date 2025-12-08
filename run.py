@@ -2,12 +2,15 @@
 
 import misc
 import pshelper as ps
+import shs
 
 #______________________________________________________________________________
 def main():
   ps.initialize(experiment=72)
   misc.draw_scale(with_tic=False)
-  misc.draw_ff()
+  misc.draw_zaxis()
+  # misc.draw_ff()
+  shs.draw()
 
   print("newpath")
   print("0 0 moveto")
@@ -22,8 +25,7 @@ def main():
   print("10 220 moveto")
   print("(Beamline) show")
 
-  print("showpage")
-  print("%%EOF")
+  ps.finalize()
 
 #______________________________________________________________________________
 if __name__ == "__main__":
