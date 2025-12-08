@@ -11,20 +11,6 @@ def main():
   misc.draw_zaxis()
   # misc.draw_ff()
   shs.draw()
-
-  print("newpath")
-  print("0 0 moveto")
-  print("300 0 lineto")
-  print("300 200 lineto")
-  print("stroke")
-
-  print("newpath")
-  print("150 100 30 0 360 arc")
-  print("stroke")
-
-  print("10 220 moveto")
-  print("(Beamline) show")
-
   ps.finalize()
 
 #______________________________________________________________________________

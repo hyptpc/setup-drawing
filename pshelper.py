@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 import datetime
+import math
 import os
 
 import config as cfg
@@ -64,6 +65,52 @@ def draw_polygon(x, y, color):
     path_polygon(0, 0, x, y)
     fill(color)
     stroke()
+
+#______________________________________________________________________________
+def draw_tag(tag, angle, dx, dy, tag_type):
+  tag_line_len = 1200
+  tag_line_angle = 10
+  if not cfg.text_tag:
+    return
+  with transform():
+    if tag_type < 0 or tag_type == 200:
+      translate_xy(-dx, dy)
+    else:
+      translate_xy(dx, dy)
+    if abs(tag_type) % 100 == 0:
+      move_to_xy(0, 0)
+      if tag_type == 100:
+        draw_text(tag, angle, 10)
+      elif tag_type == 200:
+        draw_text(tag, angle, -1)
+      else:
+        draw_text(tag, angle, 1)
+    else:
+      tilt_angle = int((abs(tag_type) % 100) / 2) * tag_line_angle
+      if abs(tag_type) % 2 == 1:
+        tilt_angle *= -1
+      align = 1
+      if tag_type < 0:
+        tilt_angle = 180 - tilt_angle
+        align = -1
+      if int(abs(tag_type) / 100) == 1:
+        if math.sin(math.radians(tilt_angle)) >= 0:
+          align = 0
+        else:
+          align = 10
+      elif int(abs(tag_type) / 100) == 2:
+        align *= -1
+      with transform():
+        with transform():
+          set_line_style(width=cfg.line_width*4, color=cfg.color_white)
+          move_to_xy(0, 0)
+          line_to_rtheta(tag_line_len, tilt_angle)
+          stroke()
+        move_to_xy(0, 0)
+        line_to_rtheta(tag_line_len, tilt_angle)
+        stroke()
+        translate_rtheta(tag_line_len*1.2, tilt_angle)
+        draw_text(tag, angle, align)
 
 #______________________________________________________________________________
 def draw_text(text, angle, align):
