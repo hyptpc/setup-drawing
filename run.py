@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import counter
 import misc
 import pshelper as ps
 import shs
@@ -11,6 +12,7 @@ def main():
   misc.draw_zaxis()
   # misc.draw_ff()
   shs.draw()
+  counter.draw()
   ps.finalize()
 
 #______________________________________________________________________________

@@ -1,5 +1,7 @@
 rgb_color = True
 text_tag = True
+draw_ftof = True
+draw_pmt = True
 
 global_rotation_angle = 0 # degree
 
@@ -14,7 +16,7 @@ font = '/TimesNewRomanPSMT'
 # font = '/ArialMT'
 # font = '/Arial-BoldMT'
 # font = '/Arial-ItaricMT'
-font_size = 14
+font_size = 1400 * scale_factor
 
 color_black = 0
 color_white = 1

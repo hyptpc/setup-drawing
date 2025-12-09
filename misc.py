@@ -5,19 +5,6 @@ import geomhelper as geom
 import pshelper as ps
 
 #______________________________________________________________________________
-def draw_zaxis():
-  ps.comment('Z axis')
-  with ps.transform():
-    x, y = geom.ff_to_xy(-2000)
-    ps.move_to_xy(0, 0)
-    ps.line_to_xy(x, y, dash=[10, 5])
-    ps.stroke()
-    x, y = geom.ff_to_xy(9000)
-    ps.move_to_xy(0, 0)
-    ps.line_to_xy(x, y, dash=[10, 5])
-    ps.stroke()
-
-#______________________________________________________________________________
 def draw_ff():
   ps.comment('Final Focus Point (FF)')
   outer_r = 300
@@ -72,3 +59,16 @@ def draw_scale(with_tic=False):
       with ps.transform(scale_length/2, subtic_size):
         ps.draw_text(f'{scale_length/1e3:.0f} m', cfg.global_rotation_angle, 0)
   ps.set_font()
+
+#______________________________________________________________________________
+def draw_zaxis():
+  ps.comment('Z axis')
+  with ps.transform():
+    x, y = geom.ff_to_xy(-2000)
+    ps.move_to_xy(0, 0)
+    ps.line_to_xy(x, y, dash=[10, 5])
+    ps.stroke()
+    x, y = geom.ff_to_xy(15000 if cfg.draw_ftof else 2000)
+    ps.move_to_xy(0, 0)
+    ps.line_to_xy(x, y, dash=[10, 5])
+    ps.stroke()
