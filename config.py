@@ -1,3 +1,5 @@
+experiment = 72
+
 rgb_color = True
 text_tag = True
 draw_ftof = True
@@ -6,6 +8,7 @@ draw_pmt = True
 global_rotation_angle = 0 # degree
 
 scale_factor = 1 / 100
+scale_with_tic = False
 cm_to_point = 28.3
 paper_width = 210.
 paper_height = 297.

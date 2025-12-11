@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import driftchamber as dc
 import counter
 import misc
 import pshelper as ps
@@ -7,12 +8,13 @@ import shs
 
 #______________________________________________________________________________
 def main():
-  ps.initialize(experiment=72)
-  misc.draw_scale(with_tic=False)
+  ps.initialize()
+  misc.draw_scale()
   misc.draw_zaxis()
   # misc.draw_ff()
   shs.draw()
   counter.draw()
+  dc.draw()
   ps.finalize()
 
 #______________________________________________________________________________

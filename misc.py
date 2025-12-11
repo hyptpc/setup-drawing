@@ -23,7 +23,7 @@ def draw_ff():
     ps.stroke()
 
 #______________________________________________________________________________
-def draw_scale(with_tic=False):
+def draw_scale():
   ps.comment('Scale of length')
   x = -8000
   y = -4000
@@ -37,7 +37,7 @@ def draw_scale(with_tic=False):
     ps.move_to_xy(0, 0)
     ps.line_to_xy(scale_length, 0)
     ps.stroke()
-    if with_tic:
+    if cfg.scale_with_tic:
       ps.move_to_xy(0, 0)
       ps.line_to_xy(0, tic_size)
       ps.stroke()

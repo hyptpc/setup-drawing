@@ -158,22 +158,22 @@ def gsave():
   print('gsave')
 
 #______________________________________________________________________________
-def header(experiment):
+def header():
   xmax = int(cfg.paper_width / 10 * cfg.cm_to_point)
   ymax = int(cfg.paper_height / 10 * cfg.cm_to_point)
   print('%!PS-Adobe-3.0 EPSF-3.0')
   # print('%%Orientation: Landscape')
   print(f'%%Creator: {os.getlogin()}')
   print(f'%%CreationTime: {datetime.datetime.now()}')
-  print(f'%%Description: J-PARC E{experiment} experiment setup ' +
+  print(f'%%Description: J-PARC E{cfg.experiment} experiment setup ' +
         'in K1.8BR beam line')
   print('%%Pages: 1')
   print(f'%%BoundingBox: 0 0 {xmax} {ymax}')
   print('%%EndComments')
 
 #______________________________________________________________________________
-def initialize(experiment):
-  header(experiment)
+def initialize():
+  header()
   set_font()
   define_length()
   define_command()
