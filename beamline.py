@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 import math
 
 import config as cfg
@@ -153,13 +154,29 @@ def draw_d5():
       ps.draw_tag('D5', 0, r_lab * c_e, -r_lab * s_e, 0)
 
 #______________________________________________________________________________
-# Q8 quadrupole, upstream of D5 (beam-local frame: origin at the D5
-# entrance-face beam crossing, +y pointing upstream along the straight
-# beam axis). The yoke is missing from the DXF conversion (likely a proxy
-# or dynamic block), so dimensions are probe-measured on the CAD-derived
-# reference PDF (refs/fa6b640d, 2.111 mm/unit): yoke 1070 x 400 with a
-# ~205 mm beam channel; a 30 mm end plate on each side, 120 mm off the
-# body. Body center 1240 mm upstream of the D5 entrance crossing.
+@contextmanager
+def d5_upstream_frame():
+  ''' Frame on the straight beam axis upstream of D5: origin at the D5
+  entrance-face beam crossing, +y pointing upstream. Yields phi_e so
+  callers can un-rotate labels back to the ff orientation. '''
+  px, py, x_c, phi_e = d5_orbit()
+  c_e = math.cos(math.radians(phi_e))
+  s_e = math.sin(math.radians(phi_e))
+  x, y = geom.ff_to_d5()
+  with ps.transform(x, y, geom.ff_angle):
+    ps.translate_xy(-x_c * c_e - D5_RHO, x_c * s_e)
+    ps.rotate(-phi_e)
+    ps.translate_xy(px, -py)
+    ps.rotate(180 - phi_e)
+    yield phi_e
+
+#______________________________________________________________________________
+# Q8 quadrupole, upstream of D5 (in the d5_upstream_frame, distances along
+# the beam from the D5 entrance-face crossing). The yoke is missing from
+# the DXF conversion (likely a proxy/dynamic block), so dimensions are
+# probe-measured on the CAD-derived reference PDF (refs/fa6b640d): yoke
+# 1070 x 400 with a ~205 mm beam channel; a 30 mm end plate on each side,
+# 120 mm off the body. Body center 1240 mm upstream of the D5 entrance.
 Q8_W         = 1070.0               # yoke total width
 Q8_L         = 400.0                # yoke length along beam
 Q8_GAP       = 205.0                # beam channel width
@@ -169,17 +186,7 @@ Q8_PLATE_GAP = 120.0                # gap between yoke and end plate
 
 def draw_q8():
   ps.comment('K1.8BR Q8')
-  px, py, x_c, phi_e = d5_orbit()
-  c_e = math.cos(math.radians(phi_e))
-  s_e = math.sin(math.radians(phi_e))
-  x, y = geom.ff_to_d5()
-  with ps.transform(x, y, geom.ff_angle):
-    # Same anchored yoke frame as draw_d5, then move to the entrance-face
-    # crossing P- and align +y with the upstream beam direction.
-    ps.translate_xy(-x_c * c_e - D5_RHO, x_c * s_e)
-    ps.rotate(-phi_e)
-    ps.translate_xy(px, -py)
-    ps.rotate(180 - phi_e)
+  with d5_upstream_frame() as phi_e:
     for sx in (1, -1):                    # yoke blocks beside the channel
       ps.path_box(sx * (Q8_W + Q8_GAP) / 4, Q8_DIST,
                   (Q8_W - Q8_GAP) / 4, Q8_L / 2)

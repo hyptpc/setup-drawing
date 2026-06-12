@@ -18,7 +18,7 @@ Modules
 - `geomhelper.py` -- FF-coordinate helpers (`ff_angle`, `ff_to_xy`).
 - `shs.py` -- SHS magnet, HypTPC, target.
 - `counter.py` -- counters (BAC, BH2, KVC, FTOF, SAC/SFV, ...).
-- `driftchamber.py` -- BLC2a/BLC2b drift chambers.
+- `driftchamber.py` -- BLC1a/b and BLC2a/b drift chambers.
 - `beamline.py` -- K1.8BR beam line elements (D5 bending magnet, Q8
   quadrupole).
 
@@ -50,3 +50,12 @@ side (120 mm off the body); body center 1240 mm upstream of the D5
 entrance-face beam crossing. The yoke is missing from the DXF conversion
 of the CAD (likely a proxy/dynamic block), so these dimensions were
 probe-measured on the CAD-derived reference PDF (accuracy ~5%).
+
+BLC1
+----
+
+BLC1a/b are identical planar MWDCs, 300 mm apart along the beam, with an
+effective area of 256 x 256 mm (Akaishi thesis, Table 2.5). They sit on
+the upstream straight beam axis between the D5 entrance end guard and
+Q8: BLC1b at 310 mm and BLC1a at 610 mm upstream of the D5 entrance-face
+beam crossing.
