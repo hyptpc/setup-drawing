@@ -8,6 +8,8 @@ rgb_color: true
 text_tag: true
 draw_ftof: false
 draw_pmt: true
+draw_beam: true
+draw_decay: true
 
 global_rotation_angle: 0      # degree
 
@@ -36,5 +38,14 @@ color_orange: [255, 140, 0]          # quadrupole magnets
 color_light_cyan: [216, 242, 255]    # LH2
 color_light_pink: [255, 182, 193]    # SHS
 color_light_yellow: [255, 255, 224]  # HypTPC
+color_red: [220, 30, 30]             # proton track
+color_purple: [150, 60, 200]         # pion track
 
 line_width: 5
+
+# Tracks from the target (uniform-field model in the SHS)
+track_b_field: 1.0            # T
+track_beam_moms: [500, 425, 360]   # beam tracks to KVC [MeV/c]
+track_reaction_mom: 735.0     # K- momentum for K-p -> Lambda pi0 [MeV/c]
+track_decay_angle: 90.0       # Lambda -> p pi- decay angle theta* [deg]
+track_z_end: 700.0            # beam track end, FF z [mm]

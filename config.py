@@ -12,7 +12,7 @@ def load(path=None):
   with open(path) as f:
     settings = yaml.safe_load(f)
   for key, value in settings.items():
-    if isinstance(value, list):
+    if key.startswith('color') and isinstance(value, list):
       r, g, b = value
       value = -(r * 1000000 + g * 1000 + b)
     globals()[key] = value
