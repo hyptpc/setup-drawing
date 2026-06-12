@@ -3,7 +3,7 @@ import datetime
 import math
 import os
 
-import config as cfg
+from . import config as cfg
 
 #______________________________________________________________________________
 @contextmanager

@@ -2,13 +2,13 @@
 
 import sys
 
-import config as cfg
-import beamline
-import driftchamber as dc
-import counter
-import misc
-import pshelper as ps
-import shs
+from module import config as cfg
+from module import beamline
+from module import counter
+from module import driftchamber as dc
+from module import misc
+from module import pshelper as ps
+from module import shs
 
 #______________________________________________________________________________
 def main():

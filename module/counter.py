@@ -1,9 +1,9 @@
 import math
 
-import beamline
-import config as cfg
-import geomhelper as geom
-import pshelper as ps
+from . import beamline
+from . import config as cfg
+from . import geomhelper as geom
+from . import pshelper as ps
 
 #______________________________________________________________________________
 def draw():

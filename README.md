@@ -36,14 +36,16 @@ Modules
 -------
 
 - `run.py` -- entry point; draws all components.
-- `config.py` -- loads `config.yml` into module attributes.
-- `pshelper.py` -- PostScript drawing primitives (paths, arcs, text tags).
-- `geomhelper.py` -- FF-coordinate helpers (`ff_angle`, `ff_to_xy`).
-- `shs.py` -- SHS magnet, HypTPC, target.
-- `counter.py` -- counters (BAC, BH2, BHT, KVC, FTOF, SAC/SFV, ...).
-- `driftchamber.py` -- BLC1a/b and BLC2a/b drift chambers.
-- `beamline.py` -- K1.8BR beam line elements (D3/D4/D5 bending magnets,
-  Q7/Q8 quadrupoles, S3 slit).
+- `module/config.py` -- loads `config.yml` into module attributes.
+- `module/pshelper.py` -- PostScript drawing primitives (paths, arcs,
+  text tags).
+- `module/geomhelper.py` -- FF-coordinate helpers (`ff_angle`,
+  `ff_to_xy`).
+- `module/shs.py` -- SHS magnet, HypTPC, target, tracks from the target.
+- `module/counter.py` -- counters (BAC, BH2, BHT, KVC, FTOF, ...).
+- `module/driftchamber.py` -- BLC1a/b and BLC2a/b drift chambers.
+- `module/beamline.py` -- K1.8BR beam line elements (D3/D4/D5 bending
+  magnets, Q7/Q8 quadrupoles, S3 slit).
 
 D5 bending magnet
 -----------------
