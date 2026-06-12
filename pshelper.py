@@ -221,8 +221,10 @@ def gsave():
 
 #______________________________________________________________________________
 def header():
-  xmax = int(cfg.paper_width / 10 * cfg.cm_to_point)
-  ymax = int(cfg.paper_height / 10 * cfg.cm_to_point)
+  bbox = getattr(cfg, 'bbox', None)
+  if bbox is None:
+    bbox = [0, 0, cfg.paper_width, cfg.paper_height]
+  x0, y0, x1, y1 = (v / 10 * cfg.cm_to_point for v in bbox)
   print('%!PS-Adobe-3.0 EPSF-3.0')
   # print('%%Orientation: Landscape')
   print(f'%%Creator: {os.getlogin()}')
@@ -230,7 +232,8 @@ def header():
   print(f'%%Description: J-PARC E{cfg.experiment} experiment setup ' +
         'in K1.8BR beam line')
   print('%%Pages: 1')
-  print(f'%%BoundingBox: 0 0 {xmax} {ymax}')
+  print(f'%%BoundingBox: {int(x0)} {int(y0)} '
+        f'{int(x1 + 1)} {int(y1 + 1)}')
   print('%%EndComments')
 
 #______________________________________________________________________________

@@ -21,7 +21,12 @@ Usage
 $ source .venv/bin/activate
 $ ./run.py > tmp.ps
 $ ps2pdf tmp.ps tmp.pdf
+$ pdfcrop --margins 10 tmp.pdf tmp.pdf
 ```
+
+`pdfcrop` (TeX Live) trims the output to the drawn content. As an
+alternative, set `bbox: [x0, y0, x1, y1]` (page mm) in `config.yml` and
+use `ps2pdf -dEPSCrop`.
 
 Drawing settings (paper size, scale, fonts, colors) live in
 `config.yml`; an alternative file can be passed as the first argument:
