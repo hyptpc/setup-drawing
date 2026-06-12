@@ -19,7 +19,7 @@ Modules
 - `shs.py` -- SHS magnet, HypTPC, target.
 - `counter.py` -- counters (BAC, BH2, KVC, FTOF, SAC/SFV, ...).
 - `driftchamber.py` -- BLC1a/b and BLC2a/b drift chambers.
-- `beamline.py` -- K1.8BR beam line elements (D5 bending magnet, Q8
+- `beamline.py` -- K1.8BR beam line elements (D4/D5 bending magnets, Q8
   quadrupole).
 
 D5 bending magnet
@@ -50,6 +50,16 @@ side (120 mm off the body); body center 1240 mm upstream of the D5
 entrance-face beam crossing. The yoke is missing from the DXF conversion
 of the CAD (likely a proxy/dynamic block), so these dimensions were
 probe-measured on the CAD-derived reference PDF (accuracy ~5%).
+
+D4 bending magnet
+-----------------
+
+Twin of D5: same rho (Akaishi thesis: 8D440S, bend 60 deg, effective
+length 1989 mm -> rho = 1899 mm) and identical CAD coil-leg lines and
+bounding rectangles at both magnets, so D5's yoke geometry is reused.
+Its exit-face beam crossing sits 1940 mm upstream of the D5 entrance
+crossing on the straight beam axis (refs overview probe: 700 mm
+upstream of Q8's center).
 
 BLC1
 ----

@@ -67,4 +67,4 @@ def draw_target():
   # ps.draw_circle(r, cfg.color_white)
   r = 80 / 2
   ps.draw_circle(r, cfg.color_light_cyan)
-  ps.draw_tag('Target', 0, 20, -20, -5)
+  ps.draw_tag('Liquid Hydrogen Target', 0, 20, -20, -5)

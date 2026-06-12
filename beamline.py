@@ -10,6 +10,7 @@ def draw():
   ps.comment('K1.8BR Beam Line')
   draw_d5()
   draw_q8()
+  draw_d4()
 
 #______________________________________________________________________________
 # D5 geometry extracted directly from CAD DWG (K1.8BRforE72_fordrawing),
@@ -59,6 +60,16 @@ def d5_orbit():
 
 def draw_d5():
   ps.comment('K1.8BR D5')
+  # Anchor: face crossing P+ at FF z = -1766.0, outgoing tangent -> +y.
+  x, y = geom.ff_to_d5()
+  with ps.transform(x, y, geom.ff_angle):
+    draw_bend('D5', 0)
+
+def draw_bend(label, tag_angle):
+  ''' D5-type bending magnet (D4 is its twin), drawn in a frame whose
+  origin is the exit-face beam crossing with the outgoing beam tangent
+  along +y. tag_angle compensates the caller frame rotation so the label
+  text renders upright. '''
   # 6-vertex gingko: outer arc + 2 radial faces + 3-side kaname (keystone)
   # on the CoC side.
   #   V1 -outer arc CCW- V2 -radial- V3 -horizontal neck- V4
@@ -80,15 +91,13 @@ def draw_d5():
   # CoC on the symmetry axis at x_c; particles bend ONLY between the
   # faces, so the bend ends exactly at the face crossing P+, at angle
   # +/-phi_e from the axis. The outgoing tangent there is NOT normal to
-  # the face, so the whole yoke is tilted w.r.t. the FF axis.
+  # the face, so the whole yoke is tilted w.r.t. the beam axis.
   px, py, x_c, phi_e = d5_orbit()
   c_e = math.cos(math.radians(phi_e))
   s_e = math.sin(math.radians(phi_e))
-  x, y = geom.ff_to_d5()
-  with ps.transform(x, y, geom.ff_angle):
-    # Anchor: face crossing P+ at FF z = -1766.0. Map P+ -> origin and
-    # the outgoing tangent -> +y, then draw everything in the yoke frame
-    # (yoke center at origin).
+  with ps.transform():
+    # Map P+ -> origin and the outgoing tangent -> +y, then draw
+    # everything in the yoke frame (yoke center at origin).
     ps.translate_xy(-x_c * c_e - D5_RHO, x_c * s_e)
     ps.rotate(-phi_e)
     ps.newpath()
@@ -148,10 +157,30 @@ def draw_d5():
       ps.line_to_xy(D5_RHO * c_e - ex * s_e, D5_RHO * s_e + ex * c_e)
       ps.stroke()
     # Label outside the outer yoke arc, on the symmetry axis. Un-rotate by
-    # phi_e so the text is upright like the other labels (ff frame).
+    # phi_e (plus the caller compensation) so the text renders upright.
     with ps.transform(0, 0, phi_e):
       r_lab = D5_R_OUTER + 300
-      ps.draw_tag('D5', 0, r_lab * c_e, -r_lab * s_e, 0)
+      ps.draw_tag(label, tag_angle, r_lab * c_e, -r_lab * s_e, 0)
+
+#______________________________________________________________________________
+# D4: twin of D5. Evidence: same rho (Akaishi thesis: 8D440S, bend
+# 60 deg, effective length 1989 mm -> rho = 1899 mm = D5's CAD orbit),
+# and identical CAD coil-leg lines (1552.4/1353.8/1192.7 mm) and bounding
+# rectangles (2900 x 1500) at both magnets. The yoke outline itself is
+# missing from the DXF conversion, so D5's yoke geometry is reused.
+# Exit-face beam crossing 1940 mm upstream of the D5 entrance crossing
+# (refs overview probe: D4 exit face is 700 mm upstream of Q8's center).
+D4_DIST = 1940.0
+
+def draw_d4():
+  ps.comment('K1.8BR D4')
+  px, py, x_c, phi_e = d5_orbit()
+  with d5_upstream_frame():
+    # D4 exit crossing on the upstream axis; flip so that +y points back
+    # downstream (= D4's outgoing beam direction toward Q8/D5).
+    ps.translate_xy(0, D4_DIST)
+    ps.rotate(180)
+    draw_bend('D4', 2 * phi_e)
 
 #______________________________________________________________________________
 @contextmanager
