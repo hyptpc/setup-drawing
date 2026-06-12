@@ -1,5 +1,6 @@
 import math
 
+import beamline
 import config as cfg
 import geomhelper as geom
 import pshelper as ps
@@ -10,6 +11,7 @@ def draw():
   draw_bac()
   draw_bh2()
   draw_kvc()
+  draw_bht()
   if cfg.draw_ftof:
     draw_cvc()
     draw_sac3()
@@ -44,6 +46,19 @@ def draw_bh2():
         ps.draw_box(w, t, cfg.color_white)
         ps.translate_xy(2*w, 0)
     ps.draw_tag('BH2', 0, 110, -10, 7)
+
+#______________________________________________________________________________
+def draw_bht():
+  ps.comment('BHT')
+  # Beam hodoscope just downstream of D3, 1470 mm upstream of the D4
+  # entrance-face crossing (refs overview probe).
+  l_bht = 1470
+  w = 200 / 2
+  t = 20 / 2
+  with beamline.d4_upstream_frame() as phi_e:
+    ps.translate_xy(0, l_bht)
+    ps.draw_box(w, t, cfg.color_white)
+    ps.draw_tag('BHT', 4 * phi_e - 180, w + 20, 0, 5)
 
 #______________________________________________________________________________
 def draw_cvc():

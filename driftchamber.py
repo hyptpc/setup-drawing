@@ -30,10 +30,10 @@ def draw_blc1(label):
   t = 64 / 2
   if 'a' in label:
     l = BLC1_L_A
-    tag_type = 212
+    tag_type = -202
   elif 'b' in label:
     l = BLC1_L_B
-    tag_type = 208
+    tag_type = -202
   else:
     print(f'%%ERROR invalid label={label}')
     return

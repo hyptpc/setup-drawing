@@ -84,6 +84,7 @@ def draw_polygon(x, y, color):
 #______________________________________________________________________________
 def draw_tag(tag, angle, dx, dy, tag_type):
   tag_line_len = 1200
+  if tag == 'BLC1b': tag_line_len = 850
   tag_line_angle = 10
   if not cfg.text_tag:
     return

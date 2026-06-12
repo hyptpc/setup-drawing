@@ -17,10 +17,10 @@ Modules
 - `pshelper.py` -- PostScript drawing primitives (paths, arcs, text tags).
 - `geomhelper.py` -- FF-coordinate helpers (`ff_angle`, `ff_to_xy`).
 - `shs.py` -- SHS magnet, HypTPC, target.
-- `counter.py` -- counters (BAC, BH2, KVC, FTOF, SAC/SFV, ...).
+- `counter.py` -- counters (BAC, BH2, BHT, KVC, FTOF, SAC/SFV, ...).
 - `driftchamber.py` -- BLC1a/b and BLC2a/b drift chambers.
-- `beamline.py` -- K1.8BR beam line elements (D4/D5 bending magnets, Q8
-  quadrupole).
+- `beamline.py` -- K1.8BR beam line elements (D3/D4/D5 bending magnets,
+  Q7/Q8 quadrupoles, S3 slit).
 
 D5 bending magnet
 -----------------
@@ -69,3 +69,17 @@ effective area of 256 x 256 mm (Akaishi thesis, Table 2.5). They sit on
 the upstream straight beam axis between the D5 entrance end guard and
 Q8: BLC1b at 310 mm and BLC1a at 610 mm upstream of the D5 entrance-face
 beam crossing.
+
+Upstream of D4
+--------------
+
+Q7 (Q306, 300 mm body), the S3 slit (200 mm jaws, with the screw
+mechanism in the CAD), and the BHT hodoscope sit on the straight beam
+axis between D4 and D3, at 676 / 1150 / 1470 mm upstream of the D4
+entrance-face crossing (refs overview probes). D3 (6D330S, K1.8BR bend
+20 deg, rho = 4730 mm) is the K1.8 / K1.8BR switching magnet: a round
+yoke (r = 1187 mm, CAD) with trapezoidal side cuts (chords 908 mm from
+the center, tilted +/-15 deg from the fan axis), a 2900 x 1500 return
+yoke perpendicular to the fan axis, and a fan-shaped pole gap that
+covers both exit channels. The central orbit (blue) runs from D3's exit
+through D4 and D5 to the target.

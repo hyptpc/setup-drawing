@@ -25,14 +25,15 @@ def draw_ff():
 #______________________________________________________________________________
 def draw_scale():
   ps.comment('Scale of length')
-  x = -8000
+  x = -5000
   y = -4000
   scale_length = 2000
   n_tic = 4
   tic_size = 300
   subtic_size = 150
   ps.set_font(font=cfg.font, font_size=cfg.font_size*0.8)
-  with ps.transform(x, y, -cfg.global_rotation_angle):
+  # Rotate -90 so the bar lies horizontally on the page.
+  with ps.transform(x, y, -cfg.global_rotation_angle - 90):
     ps.set_line_style(20, 0)
     ps.move_to_xy(0, 0)
     ps.line_to_xy(scale_length, 0)
@@ -43,7 +44,7 @@ def draw_scale():
       ps.stroke()
       dy = 1.5*tic_size
       with ps.transform(0, dy):
-        ps.draw_text('0', cfg.global_rotation_angle, 0)
+        ps.draw_text('0', cfg.global_rotation_angle + 180, 0)
       dtic = scale_length / n_tic
       for i in range(n_tic - 1):
         ps.move_to_xy((i+1)*dtic, 0)
@@ -54,10 +55,12 @@ def draw_scale():
         ps.line_to_xy(0, tic_size)
         ps.stroke()
         with ps.transform(0, dy):
-          ps.draw_text(f'{scale_length/1e3:.0f} m', cfg.global_rotation_angle, 0)
+          ps.draw_text(f'{scale_length/1e3:.0f} m',
+                       cfg.global_rotation_angle + 180, 0)
     else:
-      with ps.transform(scale_length/2, subtic_size):
-        ps.draw_text(f'{scale_length/1e3:.0f} m', cfg.global_rotation_angle, 0)
+      with ps.transform(scale_length/2, 3*subtic_size):
+        ps.draw_text(f'{scale_length/1e3:.0f} m',
+                     cfg.global_rotation_angle + 180, 0)
   ps.set_font()
 
 #______________________________________________________________________________
