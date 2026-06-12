@@ -151,6 +151,13 @@ def draw_bend(label, tag_angle, ext_out=D5_ORBIT_EXT, tag_perp=0,
     ps.newpath()
     ps.arc(g1, -th_y, +th_y)
     ps.stroke()
+    # Hidden coil legs (dashed): arcs under the yoke connecting the two
+    # coil-end plates (their radial span equals the plate length).
+    for r_leg in (D5_COIL[0], D5_COIL[1]):
+      ps.set_line_style(dash=[10, 5])
+      ps.newpath()
+      ps.arc(r_leg, -th_y, +th_y)
+      ps.stroke()
     # Central beam orbit (blue): arc up to +/-phi_e around (x_c, 0), then
     # straight extensions past the end guards.
     with ps.transform(x_c, 0):
@@ -312,37 +319,41 @@ def draw_d3():
     k18_mid = math.degrees(math.atan2(ky, kx))   # ~110 deg
     with ps.transform(cx, cy):
       fan_mid = (90 + k18_mid) / 2        # between K1.8BR (+y) and K1.8
-      # Yoke block: iron crossing the magnet center, perpendicular to
-      # the fan (symmetry) axis.
+
+      def coil_path():
+        # Coil outline (CAD): outer arcs at D3_YOKE_R (wide on the exit
+        # side, narrow at the apex), four r = D3_FILLET_R corner fillets
+        # internally tangent to the outer circle, and straight tangent
+        # chords appearing as connecting lines between consecutive arcs.
+        a_f = D3_COIL_FRONT_HALF
+        a_a = 180 - D3_COIL_APEX_HALF
+        a_m = (a_f + a_a) / 2           # chord tangent-point angle
+        r_c = D3_YOKE_R - D3_FILLET_R   # fillet center distance
+        ps.newpath()
+        ps.arc(D3_YOKE_R, fan_mid - a_f, fan_mid + a_f)
+        fillets = ((a_f, a_f, a_m),
+                   (a_a, a_m, a_a),
+                   (-a_a, 360 - a_a, 360 - a_m),
+                   (-a_f, 360 - a_m, 360 - a_f))
+        for th_c, g0_, g1_ in fillets:
+          fx = r_c * math.cos(math.radians(fan_mid + th_c))
+          fy = r_c * math.sin(math.radians(fan_mid + th_c))
+          ps.arc_xy(fx, fy, D3_FILLET_R, fan_mid + g0_, fan_mid + g1_)
+          if th_c == a_a:               # apex arc between the fillets
+            ps.arc(D3_YOKE_R, fan_mid + a_a, fan_mid + 360 - a_a)
+        ps.closepath()
+
+      # Coil below the yoke block; its hidden outline is re-stroked
+      # dashed over the yoke (engineering hidden-line convention).
+      coil_path()
+      ps.fill(cfg.color_maroon)
+      ps.stroke()
       with ps.transform(0, 0, fan_mid - 90):
         ps.path_box(0, 0, D3_RECT_L / 2, D3_RECT_W / 2)
         ps.fill(cfg.color_dark_green)
         ps.stroke()
-      # Round coil drawn on top with its full outline visible (CAD):
-      # outer arcs at D3_YOKE_R (wide on the exit side, narrow at the
-      # apex), four r = D3_FILLET_R corner fillets internally tangent to
-      # the outer circle, and straight tangent chords between fillets
-      # along the converging sides.
-      a_f = D3_COIL_FRONT_HALF
-      a_a = 180 - D3_COIL_APEX_HALF
-      a_m = (a_f + a_a) / 2             # chord tangent-point angle
-      r_c = D3_YOKE_R - D3_FILLET_R     # fillet center distance
-      ps.newpath()
-      ps.arc(D3_YOKE_R, fan_mid - a_f, fan_mid + a_f)
-      # (center angle, arc start, arc end); the straight chords appear
-      # automatically as connecting lines between consecutive arcs.
-      fillets = ((a_f, a_f, a_m),
-                 (a_a, a_m, a_a),
-                 (-a_a, 360 - a_a, 360 - a_m),
-                 (-a_f, 360 - a_m, 360 - a_f))
-      for th_c, g0_, g1_ in fillets:
-        fx = r_c * math.cos(math.radians(fan_mid + th_c))
-        fy = r_c * math.sin(math.radians(fan_mid + th_c))
-        ps.arc_xy(fx, fy, D3_FILLET_R, fan_mid + g0_, fan_mid + g1_)
-        if th_c == a_a:                 # apex arc between the fillets
-          ps.arc(D3_YOKE_R, fan_mid + a_a, fan_mid + 360 - a_a)
-      ps.closepath()
-      ps.fill(cfg.color_maroon)
+      coil_path()
+      ps.set_line_style(dash=[10, 5])
       ps.stroke()
       # Coil bore / pole gap (white): fan with arc ends at D3_FAN_R, the
       # apex truncated by the narrow arc on the opposite side (CAD).
