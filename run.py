@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import beamline
 import driftchamber as dc
 import counter
 import misc
@@ -14,6 +15,7 @@ def main():
   # misc.draw_ff()
   shs.draw()
   counter.draw()
+  beamline.draw()
   dc.draw()
   ps.finalize()
 

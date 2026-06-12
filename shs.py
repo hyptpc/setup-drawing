@@ -54,7 +54,7 @@ def draw_magnet():
   ps.draw_box(yoke_x, yoke_z, cfg.color_light_pink)
   ps.draw_circle(yoke_hole_outer_r, cfg.color_light_gray)
   ps.draw_circle(yoke_hole_inner_r, 1)
-  ps.draw_tag('HS Magnet', 0, 1100, 0, 0)
+  ps.draw_tag('SHS Magnet', 0, 1100, 0, 0)
 
 #______________________________________________________________________________
 def draw_target():

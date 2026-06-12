@@ -19,6 +19,14 @@ def transform(x=0, y=0, angle=0):
     print("grestore")
 
 #______________________________________________________________________________
+def arc(r, theta1, theta2):
+  print(f'0 0 {r} mm {theta1} {theta2} arc')
+
+#______________________________________________________________________________
+def arcn(r, theta1, theta2):
+  print(f'0 0 {r} mm {theta1} {theta2} arcn')
+
+#______________________________________________________________________________
 def closepath():
   print('closepath')
 
@@ -56,6 +64,13 @@ def draw_box(x, z, color):
 def draw_circle(r, color):
   with transform():
     path_circle(r)
+    fill(color)
+    stroke()
+
+#______________________________________________________________________________
+def draw_sector(r_inner, r_outer, theta1, theta2, color):
+  with transform():
+    path_sector(r_inner, r_outer, theta1, theta2)
     fill(color)
     stroke()
 
@@ -223,6 +238,15 @@ def path_box(x_center, z_center, x, z):
 def path_circle(r):
   newpath()
   print(f'0 0 {r} mm 0 360 arc')
+
+#______________________________________________________________________________
+def path_sector(r_inner, r_outer, theta1, theta2):
+  newpath()
+  move_to_rtheta(r_outer, theta1)
+  arc(r_outer, theta1, theta2)
+  line_to_rtheta(r_inner, theta2)
+  arcn(r_inner, theta2, theta1)
+  closepath()
 
 #______________________________________________________________________________
 def path_polygon(x_center, y_center, x_list, y_list):
