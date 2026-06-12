@@ -28,6 +28,7 @@ color_light_gray = 0.8
 color_dark_green = -100000 # D5
 color_maroon = -176048096 # D5 coil
 color_blue = -255 # beam orbit
+color_orange = -255140000 # quadrupole magnet
 color_light_cyan = -216242255 # LH2
 color_light_pink = -255182193 # SHS
 color_light_yellow = -255255224 # HypTPC

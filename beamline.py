@@ -8,6 +8,7 @@ import pshelper as ps
 def draw():
   ps.comment('K1.8BR Beam Line')
   draw_d5()
+  draw_q8()
 
 #______________________________________________________________________________
 # D5 geometry extracted directly from CAD DWG (K1.8BRforE72_fordrawing),
@@ -43,6 +44,18 @@ D5_GAP_R1    = 1866.7
 D5_R_AP      = 1666.7               # aperture center radius
 D5_ORBIT_EXT = 400.0                # straight orbit extension past faces
 
+#______________________________________________________________________________
+def d5_orbit():
+  ''' D5 orbit geometry in the yoke frame: returns (px, py, x_c, phi_e)
+  with P+(px, py) = exit-face crossing at the aperture center, x_c = orbit
+  CoC on the symmetry axis, phi_e = half bend angle [deg]. '''
+  c = math.cos(math.radians(D5_YOKE_HALF))
+  s = math.sin(math.radians(D5_YOKE_HALF))
+  px, py = D5_R_AP * c, D5_R_AP * s
+  x_c    = px - math.sqrt(D5_RHO**2 - py*py)
+  phi_e  = math.degrees(math.atan2(py, px - x_c))
+  return px, py, x_c, phi_e
+
 def draw_d5():
   ps.comment('K1.8BR D5')
   # 6-vertex gingko: outer arc + 2 radial faces + 3-side kaname (keystone)
@@ -67,9 +80,7 @@ def draw_d5():
   # faces, so the bend ends exactly at the face crossing P+, at angle
   # +/-phi_e from the axis. The outgoing tangent there is NOT normal to
   # the face, so the whole yoke is tilted w.r.t. the FF axis.
-  px, py = D5_R_AP * c, D5_R_AP * s         # face crossing point P+
-  x_c    = px - math.sqrt(D5_RHO**2 - py*py)
-  phi_e  = math.degrees(math.atan2(py, px - x_c))
+  px, py, x_c, phi_e = d5_orbit()
   c_e = math.cos(math.radians(phi_e))
   s_e = math.sin(math.radians(phi_e))
   x, y = geom.ff_to_d5()
@@ -140,3 +151,62 @@ def draw_d5():
     with ps.transform(0, 0, phi_e):
       r_lab = D5_R_OUTER + 300
       ps.draw_tag('D5', 0, r_lab * c_e, -r_lab * s_e, 0)
+
+#______________________________________________________________________________
+# Q8 quadrupole, upstream of D5 (beam-local frame: origin at the D5
+# entrance-face beam crossing, +y pointing upstream along the straight
+# beam axis). The yoke is missing from the DXF conversion (likely a proxy
+# or dynamic block), so dimensions are probe-measured on the CAD-derived
+# reference PDF (refs/fa6b640d, 2.111 mm/unit): yoke 1070 x 400 with a
+# ~205 mm beam channel; a 30 mm end plate on each side, 120 mm off the
+# body. Body center 1240 mm upstream of the D5 entrance crossing.
+Q8_W         = 1070.0               # yoke total width
+Q8_L         = 400.0                # yoke length along beam
+Q8_GAP       = 205.0                # beam channel width
+Q8_DIST      = 1240.0               # D5 entrance crossing to Q8 center
+Q8_PLATE_T   = 30.0                 # end plate thickness
+Q8_PLATE_GAP = 120.0                # gap between yoke and end plate
+
+def draw_q8():
+  ps.comment('K1.8BR Q8')
+  px, py, x_c, phi_e = d5_orbit()
+  c_e = math.cos(math.radians(phi_e))
+  s_e = math.sin(math.radians(phi_e))
+  x, y = geom.ff_to_d5()
+  with ps.transform(x, y, geom.ff_angle):
+    # Same anchored yoke frame as draw_d5, then move to the entrance-face
+    # crossing P- and align +y with the upstream beam direction.
+    ps.translate_xy(-x_c * c_e - D5_RHO, x_c * s_e)
+    ps.rotate(-phi_e)
+    ps.translate_xy(px, -py)
+    ps.rotate(180 - phi_e)
+    for sx in (1, -1):                    # yoke blocks beside the channel
+      ps.path_box(sx * (Q8_W + Q8_GAP) / 4, Q8_DIST,
+                  (Q8_W - Q8_GAP) / 4, Q8_L / 2)
+      ps.fill(cfg.color_orange)
+      ps.stroke()
+    for sy in (1, -1):                    # end guards, split by the aperture
+      d_plate = Q8_L / 2 + Q8_PLATE_GAP + Q8_PLATE_T / 2
+      for sx in (1, -1):
+        ps.path_box(sx * (Q8_W + Q8_GAP) / 4, Q8_DIST + sy * d_plate,
+                    (Q8_W - Q8_GAP) / 4, Q8_PLATE_T / 2)
+        ps.fill(cfg.color_orange)
+        ps.stroke()
+    # Close each aperture opening with a line across the channel, at both
+    # faces of the yoke body and of each end guard.
+    edges = [Q8_L / 2, Q8_L / 2 + Q8_PLATE_GAP,
+             Q8_L / 2 + Q8_PLATE_GAP + Q8_PLATE_T]
+    ps.newpath()
+    for sy in (1, -1):
+      for d_edge in edges:
+        ps.move_to_xy(-Q8_GAP / 2, Q8_DIST + sy * d_edge)
+        ps.line_to_xy(+Q8_GAP / 2, Q8_DIST + sy * d_edge)
+    ps.stroke()
+    # Upstream beam axis (blue) through the channel.
+    ps.set_color(cfg.color_blue)
+    ps.newpath()
+    ps.move_to_xy(0, 0)
+    ps.line_to_xy(0, Q8_DIST + Q8_L)
+    ps.stroke()
+    # Label beside the yoke; un-rotate so the text is upright (ff frame).
+    ps.draw_tag('Q8', 2 * phi_e - 180, -(Q8_W / 2 + 250), Q8_DIST + 400, 0)
