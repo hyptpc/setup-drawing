@@ -6,5 +6,6 @@ __pycache__/
 *.dwg
 *.dxf
 .DS_Store
+.venv/
 AGENTS.md
 CLAUDE.md

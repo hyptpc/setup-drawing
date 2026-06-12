@@ -237,12 +237,12 @@ D3_DIST      = 2200.0               # D4 entrance crossing to D3 exit
 D3_YOKE_R    = 1187.0               # round yoke radius
 D3_CUT_D     = 908.2                # center to side-cut chords (perp.)
 D3_CUT_TILT  = 15.0                 # chord tilt from the fan axis
-D3_RECT_L    = 2900.0               # return-yoke rectangle length
-D3_RECT_W    = 1500.0               # return-yoke rectangle width
+D3_RECT_L    = 2900.0               # coil rectangle length
+D3_RECT_W    = 1500.0               # coil rectangle width
 D3_CEN       = 620.0                # exit crossing to yoke center (arc)
-D3_FAN_R     = 750.0                # fan pole radius (wide end)
-D3_FAN_SPAN  = 80.0                 # fan opening angle
-D3_FAN_APEX  = 850.0                # yoke center to fan apex
+D3_FAN_R     = 750.0                # fan gap radius (both ends)
+D3_FAN_SPAN  = 78.9                 # fan opening angle (wide end)
+D3_FAN_APEX_SPAN = 23.1             # truncated-apex arc opening angle
 
 def draw_q7():
   ps.comment('K1.8BR Q7')
@@ -311,11 +311,12 @@ def draw_d3():
     k18_mid = math.degrees(math.atan2(ky, kx))   # ~110 deg
     with ps.transform(cx, cy):
       fan_mid = (90 + k18_mid) / 2        # between K1.8BR (+y) and K1.8
-      # Return-yoke rectangle, concentric with the round yoke and
-      # perpendicular to the fan (symmetry) axis (CAD: 0.7 deg off).
+      # Coil rectangle: the racetrack coil straight sections run through
+      # the trapezoidal cutouts of the round yoke and stick out on both
+      # sides. Concentric with the yoke, perpendicular to the fan axis.
       with ps.transform(0, 0, fan_mid - 90):
         ps.path_box(0, 0, D3_RECT_L / 2, D3_RECT_W / 2)
-        ps.fill(cfg.color_dark_green)
+        ps.fill(cfg.color_maroon)
         ps.stroke()
       # Round yoke, with its left and right sides cut off inside the
       # return yoke by straight chords (perpendicular distance D3_CUT_D
@@ -331,14 +332,17 @@ def draw_d3():
       ps.fill(cfg.color_dark_green)
       ps.stroke()
       # Fan-shaped pole gap (white) opening toward both exit channels.
+      # Both ends are arcs at D3_FAN_R around the yoke center; the apex
+      # is truncated by the narrow arc on the opposite side (CAD).
       f0 = fan_mid - D3_FAN_SPAN / 2
       f1 = fan_mid + D3_FAN_SPAN / 2
-      ax = D3_FAN_APEX * math.cos(math.radians(fan_mid + 180))
-      ay = D3_FAN_APEX * math.sin(math.radians(fan_mid + 180))
+      b0 = fan_mid + 180 - D3_FAN_APEX_SPAN / 2
+      b1 = fan_mid + 180 + D3_FAN_APEX_SPAN / 2
       ps.newpath()
-      ps.move_to_xy(ax, ay)
-      ps.line_to_rtheta(D3_FAN_R, f0)
+      ps.move_to_rtheta(D3_FAN_R, f0)
       ps.arc(D3_FAN_R, f0, f1)
+      ps.line_to_rtheta(D3_FAN_R, b0)
+      ps.arc(D3_FAN_R, b0, b1)
       ps.closepath()
       ps.fill(cfg.color_white)
       ps.stroke()

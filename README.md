@@ -4,16 +4,34 @@ setup-drawing
 Generates a publication-quality overview figure of the J-PARC E72
 experimental setup in the K1.8BR beam line, output as PDF via PostScript.
 
+Setup
+-----
+
+Create a virtual environment and install the dependencies (PyYAML):
+
 ```sh
+$ python3 -m venv .venv
+$ .venv/bin/pip install pyyaml
+```
+
+Usage
+-----
+
+```sh
+$ source .venv/bin/activate
 $ ./run.py > tmp.ps
 $ ps2pdf tmp.ps tmp.pdf
 ```
+
+Drawing settings (paper size, scale, fonts, colors) live in
+`config.yml`; an alternative file can be passed as the first argument:
+`./run.py myconfig.yml > tmp.ps`.
 
 Modules
 -------
 
 - `run.py` -- entry point; draws all components.
-- `config.py` -- paper size, scale, fonts, colors.
+- `config.py` -- loads `config.yml` into module attributes.
 - `pshelper.py` -- PostScript drawing primitives (paths, arcs, text tags).
 - `geomhelper.py` -- FF-coordinate helpers (`ff_angle`, `ff_to_xy`).
 - `shs.py` -- SHS magnet, HypTPC, target.
