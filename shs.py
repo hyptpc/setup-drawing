@@ -15,6 +15,27 @@ def draw():
   x, y = geom.ff_to_xy(-150-143)
   with ps.transform(x, y, geom.ff_angle):
     draw_target()
+  draw_scatter()
+
+#______________________________________________________________________________
+def draw_scatter():
+  ps.comment('Scattered tracks from the target toward KVC')
+  # Simple uniform-field assumption: B = 1 T. The three momenta are
+  # chosen so the tracks from the target center fan across KVC.
+  b_field = 1.0                       # T
+  p_moms = (500.0, 425.0, 360.0)      # MeV/c
+  z_target = -293.0
+  z_end = 600.0                       # slightly downstream of KVC
+  x, y = geom.ff_to_xy(z_target)
+  with ps.transform(x, y, geom.ff_angle):
+    for p_mom in p_moms:
+      rho = p_mom / (0.29979 * b_field)
+      th_end = math.degrees(math.asin((z_end - z_target) / rho))
+      with ps.transform(-rho, 0):     # CoC on the KVC (left) side
+        ps.set_color(cfg.color_blue)
+        ps.newpath()
+        ps.arc(rho, 0, th_end)
+        ps.stroke()
 
 #______________________________________________________________________________
 def draw_hyptpc():

@@ -64,7 +64,7 @@ def d5_orbit():
 def draw_d5():
   ps.comment('K1.8BR D5')
   # Anchor: face crossing P+ at FF z = -1766.0, outgoing tangent -> +y.
-  # The outgoing orbit extends all the way to the target (FF z = -293.1).
+  # The outgoing orbit extends up to the target (FF z = -293.1).
   ext_target = 1456.615 + 309.4 - 293.1
   x, y = geom.ff_to_d5()
   with ps.transform(x, y, geom.ff_angle):
