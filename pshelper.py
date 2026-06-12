@@ -23,6 +23,10 @@ def arc(r, theta1, theta2):
   print(f'0 0 {r} mm {theta1} {theta2} arc')
 
 #______________________________________________________________________________
+def arc_xy(x, y, r, theta1, theta2):
+  print(f'{x} mm {y} mm {r} mm {theta1} {theta2} arc')
+
+#______________________________________________________________________________
 def arcn(r, theta1, theta2):
   print(f'0 0 {r} mm {theta1} {theta2} arcn')
 
@@ -136,7 +140,11 @@ def draw_text(text, angle, align):
     0: center align, y higher
    10: center align, y lower
    -1: right align
+  Text between | pairs is rendered as a subscript.
   '''
+  if '|' in text:
+    draw_text_sub(text, angle, align)
+    return
   with transform():
     move_to_xy(0, 0)
     rotate(-cfg.global_rotation_angle + angle)
@@ -151,6 +159,44 @@ def draw_text(text, angle, align):
     elif align == 10:
       print(f'({text}) dup stringwidth pop 2.0 div neg' +
             f'(A) stringtop neg rmoveto show')
+
+#______________________________________________________________________________
+def draw_text_sub(text, angle, align):
+  ''' draw_text for strings with |subscript| segments (odd parts after
+  splitting on |). Subscripts are 0.7x size, dropped by 0.25x size. '''
+  parts = text.split('|')
+  sub_drop = 0.25 * cfg.font_size
+
+  def set_size(scale=1.0):
+    print(f'{cfg.font} findfont {cfg.font_size*scale} scalefont setfont')
+
+  with transform():
+    move_to_xy(0, 0)
+    rotate(-cfg.global_rotation_angle + angle)
+    print('/wtot 0 def')
+    for i, part in enumerate(parts):
+      if not part:
+        continue
+      set_size(0.7 if i % 2 else 1.0)
+      print(f'({part}) stringwidth pop wtot add /wtot exch def')
+    set_size()
+    if align == 1:
+      print('(A) stringtop 2.0 div neg 0. exch rmoveto')
+    elif align == -1:
+      print('wtot neg (A) stringtop 2.0 div neg rmoveto')
+    elif align == 0:
+      print('wtot 2.0 div neg (A) stringbottom neg rmoveto')
+    elif align == 10:
+      print('wtot 2.0 div neg (A) stringtop neg rmoveto')
+    for i, part in enumerate(parts):
+      if not part:
+        continue
+      set_size(0.7 if i % 2 else 1.0)
+      if i % 2:
+        print(f'0 {-sub_drop} rmoveto ({part}) show 0 {sub_drop} rmoveto')
+      else:
+        print(f'({part}) show')
+    set_size()
 
 #______________________________________________________________________________
 def fill(color):

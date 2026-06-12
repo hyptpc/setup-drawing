@@ -25,8 +25,8 @@ def draw_ff():
 #______________________________________________________________________________
 def draw_scale():
   ps.comment('Scale of length')
-  x = -5000
-  y = -4000
+  x = 5000
+  y = -8000
   scale_length = 2000
   n_tic = 4
   tic_size = 300
@@ -71,7 +71,7 @@ def draw_zaxis():
     ps.move_to_xy(0, 0)
     ps.line_to_xy(x, y, dash=[10, 5])
     ps.stroke()
-    x, y = geom.ff_to_xy(15000 if cfg.draw_ftof else 2000)
+    x, y = geom.ff_to_xy(15000 if cfg.draw_ftof else 0)
     ps.move_to_xy(0, 0)
     ps.line_to_xy(x, y, dash=[10, 5])
     ps.stroke()

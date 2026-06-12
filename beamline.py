@@ -234,11 +234,12 @@ D3_DIST      = 2200.0               # D4 entrance crossing to D3 exit
 # r=1187 / r=750 around its center); the 2900 x 1500 rectangle is the
 # return yoke, perpendicular to the K1.8 axis. The yoke center sits
 # 620 mm upstream of the K1.8BR exit crossing along the orbit.
-D3_YOKE_R    = 1187.0               # round yoke radius
-D3_CUT_D     = 908.2                # center to side-cut chords (perp.)
-D3_CUT_TILT  = 15.0                 # chord tilt from the fan axis
-D3_RECT_L    = 2900.0               # coil rectangle length
-D3_RECT_W    = 1500.0               # coil rectangle width
+D3_YOKE_R    = 1187.0               # round coil outer radius
+D3_FILLET_R  = 430.0                # coil corner fillet radius (CAD)
+D3_COIL_FRONT_HALF = 52.95          # outer arc half span, exit side
+D3_COIL_APEX_HALF  = 23.05          # outer arc half span, apex side
+D3_RECT_L    = 2900.0               # yoke block length
+D3_RECT_W    = 1500.0               # yoke block width
 D3_CEN       = 620.0                # exit crossing to yoke center (arc)
 D3_FAN_R     = 750.0                # fan gap radius (both ends)
 D3_FAN_SPAN  = 78.9                 # fan opening angle (wide end)
@@ -311,29 +312,40 @@ def draw_d3():
     k18_mid = math.degrees(math.atan2(ky, kx))   # ~110 deg
     with ps.transform(cx, cy):
       fan_mid = (90 + k18_mid) / 2        # between K1.8BR (+y) and K1.8
-      # Coil rectangle: the racetrack coil straight sections run through
-      # the trapezoidal cutouts of the round yoke and stick out on both
-      # sides. Concentric with the yoke, perpendicular to the fan axis.
+      # Yoke block: iron crossing the magnet center, perpendicular to
+      # the fan (symmetry) axis.
       with ps.transform(0, 0, fan_mid - 90):
         ps.path_box(0, 0, D3_RECT_L / 2, D3_RECT_W / 2)
-        ps.fill(cfg.color_maroon)
+        ps.fill(cfg.color_dark_green)
         ps.stroke()
-      # Round yoke, with its left and right sides cut off inside the
-      # return yoke by straight chords (perpendicular distance D3_CUT_D
-      # from the center, tilted +/-D3_CUT_TILT from the fan axis, so the
-      # cuts form a trapezoid opening toward the exits).
-      gam = math.degrees(math.acos(D3_CUT_D / D3_YOKE_R))
+      # Round coil drawn on top with its full outline visible (CAD):
+      # outer arcs at D3_YOKE_R (wide on the exit side, narrow at the
+      # apex), four r = D3_FILLET_R corner fillets internally tangent to
+      # the outer circle, and straight tangent chords between fillets
+      # along the converging sides.
+      a_f = D3_COIL_FRONT_HALF
+      a_a = 180 - D3_COIL_APEX_HALF
+      a_m = (a_f + a_a) / 2             # chord tangent-point angle
+      r_c = D3_YOKE_R - D3_FILLET_R     # fillet center distance
       ps.newpath()
-      ps.move_to_rtheta(D3_YOKE_R, fan_mid - 105 + gam)
-      ps.arc(D3_YOKE_R, fan_mid - 105 + gam, fan_mid + 105 - gam)
-      ps.line_to_rtheta(D3_YOKE_R, fan_mid + 105 + gam)
-      ps.arc(D3_YOKE_R, fan_mid + 105 + gam, fan_mid + 255 - gam)
+      ps.arc(D3_YOKE_R, fan_mid - a_f, fan_mid + a_f)
+      # (center angle, arc start, arc end); the straight chords appear
+      # automatically as connecting lines between consecutive arcs.
+      fillets = ((a_f, a_f, a_m),
+                 (a_a, a_m, a_a),
+                 (-a_a, 360 - a_a, 360 - a_m),
+                 (-a_f, 360 - a_m, 360 - a_f))
+      for th_c, g0_, g1_ in fillets:
+        fx = r_c * math.cos(math.radians(fan_mid + th_c))
+        fy = r_c * math.sin(math.radians(fan_mid + th_c))
+        ps.arc_xy(fx, fy, D3_FILLET_R, fan_mid + g0_, fan_mid + g1_)
+        if th_c == a_a:                 # apex arc between the fillets
+          ps.arc(D3_YOKE_R, fan_mid + a_a, fan_mid + 360 - a_a)
       ps.closepath()
-      ps.fill(cfg.color_dark_green)
+      ps.fill(cfg.color_maroon)
       ps.stroke()
-      # Fan-shaped pole gap (white) opening toward both exit channels.
-      # Both ends are arcs at D3_FAN_R around the yoke center; the apex
-      # is truncated by the narrow arc on the opposite side (CAD).
+      # Coil bore / pole gap (white): fan with arc ends at D3_FAN_R, the
+      # apex truncated by the narrow arc on the opposite side (CAD).
       f0 = fan_mid - D3_FAN_SPAN / 2
       f1 = fan_mid + D3_FAN_SPAN / 2
       b0 = fan_mid + 180 - D3_FAN_APEX_SPAN / 2

@@ -96,8 +96,9 @@ mechanism in the CAD), and the BHT hodoscope sit on the straight beam
 axis between D4 and D3, at 676 / 1150 / 1470 mm upstream of the D4
 entrance-face crossing (refs overview probes). D3 (6D330S, K1.8BR bend
 20 deg, rho = 4730 mm) is the K1.8 / K1.8BR switching magnet: a round
-yoke (r = 1187 mm, CAD) with trapezoidal side cuts (chords 908 mm from
-the center, tilted +/-15 deg from the fan axis), a 2900 x 1500 return
-yoke perpendicular to the fan axis, and a fan-shaped pole gap that
-covers both exit channels. The central orbit (blue) runs from D3's exit
-through D4 and D5 to the target.
+coil (outer arcs at r = 1187 mm with r = 430 mm corner fillets and
+tangent chords, per CAD) on top of a 2900 x 1500 yoke block
+perpendicular to the fan axis, with a fan-shaped pole gap / coil bore
+that covers both exit channels (straight K1.8 and the 20 deg K1.8BR
+bend). The central orbit (blue) runs from D3's exit through D4 and D5
+to the target.

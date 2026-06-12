@@ -6,7 +6,7 @@ experiment: 72
 
 rgb_color: true
 text_tag: true
-draw_ftof: true
+draw_ftof: false
 draw_pmt: true
 
 global_rotation_angle: 0      # degree
