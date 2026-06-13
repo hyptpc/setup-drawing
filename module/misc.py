@@ -84,18 +84,20 @@ def draw_zaxis():
     ps.line_to_xy(*geom.ff_to_xy(z_end), dash=[10, 5])
     ps.stroke()
     if compress:
-      draw_break_line(1400)
+      draw_break_line(1400, label=f'~{cfg.ftof_shift/1000:.0f} m')
 
 #______________________________________________________________________________
-def draw_break_line(z, length=1100, amp=80, n_cycle=9):
+def draw_break_line(z, length=2300, amp=80, label=None):
   ''' Long wavy line perpendicular to the beam axis at drawn FF z,
   marking an omitted distance between the SHS region and the forward
-  arm. '''
+  arm. Spans far enough to read as a cut across the figure; an optional
+  label notes the omitted real distance. '''
   rad = math.radians(geom.ff_angle)
   dx, dy = -math.sin(rad), math.cos(rad)   # +z (axis) direction
   px, py = math.cos(rad), math.sin(rad)    # perpendicular to the axis
   cx, cy = geom.ff_to_xy(z)
-  n = 200
+  n_cycle = max(2, round(2 * length / 245))   # keep ~245 mm wavelength
+  n = 20 * n_cycle
   for i in range(n + 1):
     t = -length + 2 * length * i / n
     d = amp * math.sin(2 * math.pi * n_cycle * i / n)
@@ -105,3 +107,7 @@ def draw_break_line(z, length=1100, amp=80, n_cycle=9):
     else:
       ps.line_to_xy(x, y)
   ps.stroke()
+  if label:
+    lx, ly = cx + 0.55 * length * px, cy + 0.55 * length * py
+    with ps.transform(lx, ly, -cfg.global_rotation_angle - 90):
+      ps.draw_text(label, cfg.global_rotation_angle + 180, 0)
