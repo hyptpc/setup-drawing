@@ -2,7 +2,9 @@
 # Colors: either a grayscale value in 0..1, or an [R, G, B] list
 # (0..255 each); lists are encoded internally for pshelper.set_color.
 
-experiment: 72
+# Which figure variant this file describes (free text; used in the
+# PostScript %%Description and to document the preset).
+variant: bac_nim
 
 rgb_color: true
 text_tag: true
@@ -10,6 +12,9 @@ draw_ftof: false
 draw_pmt: true
 draw_beam: false
 draw_decay: true
+# Element labels to suppress (matched against the tag text, subscript
+# markup stripped). Empty to show all (e.g. the E72 production figure).
+hide_labels: [KVC, HypTPC, HTOF, BLC1a, BLC1b, LH2 Target]
 
 global_rotation_angle: 0      # degree
 

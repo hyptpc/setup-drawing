@@ -89,7 +89,7 @@ def draw_kvc():
   with ps.transform(x, y, geom.ff_angle):
     ps.translate_xy(-216, 0)
     ps.draw_box(w, t, cfg.color_white)
-    # ps.draw_tag('KVC', 0, 110, 10, -6)
+    ps.draw_tag('KVC', 0, 110, 10, -6)
 
 #______________________________________________________________________________
 def draw_sac3():

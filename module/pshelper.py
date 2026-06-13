@@ -92,6 +92,8 @@ def draw_tag(tag, angle, dx, dy, tag_type):
   tag_line_angle = 10
   if not cfg.text_tag:
     return
+  if tag.replace('|', '') in getattr(cfg, 'hide_labels', []):
+    return
   with transform():
     if tag_type < 0 or tag_type == 200:
       translate_xy(-dx, dy)
@@ -229,8 +231,7 @@ def header():
   # print('%%Orientation: Landscape')
   print(f'%%Creator: {os.getlogin()}')
   print(f'%%CreationTime: {datetime.datetime.now()}')
-  print(f'%%Description: J-PARC E{cfg.experiment} experiment setup ' +
-        'in K1.8BR beam line')
+  print(f'%%Description: K1.8BR beam line setup ({cfg.variant})')
   print('%%Pages: 1')
   print(f'%%BoundingBox: {int(x0)} {int(y0)} '
         f'{int(x1 + 1)} {int(y1 + 1)}')

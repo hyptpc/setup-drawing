@@ -107,7 +107,7 @@ def draw_hyptpc():
   y = [-l, l, w, w, l, -l, -w, -w, -l]
   with ps.transform():
     ps.draw_polygon(x, y, cfg.color_light_yellow)
-  # ps.draw_tag('HypTPC', 0, 250, 0, -1)
+  ps.draw_tag('HypTPC', 0, 250, 0, -1)
 
 #______________________________________________________________________________
 def draw_htof():
@@ -124,7 +124,7 @@ def draw_htof():
       for j in range(n_seg):
         ps.translate_xy(2*x, 0)
         ps.draw_box(x, z, cfg.color_white)
-  # ps.draw_tag('HTOF', 0, 340, 140, -4)
+  ps.draw_tag('HTOF', 0, 340, 140, -4)
 
 #______________________________________________________________________________
 def draw_magnet():
@@ -149,4 +149,4 @@ def draw_target():
   # ps.draw_circle(r, cfg.color_white)
   r = 80 / 2
   ps.draw_circle(r, cfg.color_light_cyan)
-  # ps.draw_tag('LH|2| Target', 0, 20, -20, -5)
+  ps.draw_tag('LH|2| Target', 0, 20, -20, -5)
