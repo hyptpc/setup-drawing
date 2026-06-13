@@ -8,7 +8,7 @@ def load(path=None):
   [R, G, B] color lists are encoded into the negative integer form used
   by pshelper.set_color; font_size is scaled by scale_factor. '''
   if path is None:
-    path = os.path.join(os.path.dirname(__file__), '..', 'config.yml')
+    path = os.path.join(os.path.dirname(__file__), '..', 'conf', 'e72.yml')
   with open(path) as f:
     settings = yaml.safe_load(f)
   for key, value in settings.items():
