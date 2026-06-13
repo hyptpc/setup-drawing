@@ -25,10 +25,10 @@ def draw_ff():
 #______________________________________________________________________________
 def draw_scale():
   ps.comment('Scale of length')
-  x = 5000
+  x = 4700
   y = -7700
-  scale_length = 3000
-  n_tic = 3
+  scale_length = cfg.scale_length*1e3
+  n_tic = int(cfg.scale_length)
   tic_size = 300
   subtic_size = 150
   ps.set_font(font=cfg.font, font_size=cfg.font_size*0.8)

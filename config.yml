@@ -8,13 +8,14 @@ rgb_color: true
 text_tag: true
 draw_ftof: false
 draw_pmt: true
-draw_beam: true
+draw_beam: false
 draw_decay: true
 
 global_rotation_angle: 0      # degree
 
 scale_factor: 0.01
-scale_with_tic: true
+scale_length: 1               # m
+scale_with_tic: false
 cm_to_point: 28.3
 paper_width: 210.0            # mm
 paper_height: 297.0           # mm

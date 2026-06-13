@@ -6,6 +6,9 @@ experimental setup in the K1.8BR beam line, output as PDF via PostScript.
 
 ![Example](example.png)
 
+The beam flight length from BHT to BH2, along the central orbit through
+D4 and D5, is about 8.37 m.
+
 Setup
 -----
 

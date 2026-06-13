@@ -41,8 +41,7 @@ def draw_blc1(label):
     ps.translate_xy(0, l)
     ps.draw_box(w, t, cfg.color_light_gray)
     ps.draw_box(w_window, t, cfg.color_white)
-    # Leader-line tag; the angle un-rotates the text to the ff orientation.
-    ps.draw_tag('BLC1'+label, 2 * phi_e - 180, w + 20, 0, tag_type)
+    # ps.draw_tag('BLC1'+label, 2 * phi_e - 180, w + 20, 0, tag_type)
 
 #______________________________________________________________________________
 def draw_blc2(label):
