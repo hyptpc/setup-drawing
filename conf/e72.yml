@@ -2,7 +2,10 @@
 # Colors: either a grayscale value in 0..1, or an [R, G, B] list
 # (0..255 each); lists are encoded internally for pshelper.set_color.
 
-# E72 production figure: everything on.
+# E72 production figure: all labels and target tracks on.
+# The forward arm (FTOF/SAC/SFV) is ~14 m downstream; it is drawn
+# shifted upstream by ftof_shift with an axis break (see misc.draw_break)
+# so the figure stays compact.
 variant: e72
 
 rgb_color: true
@@ -11,6 +14,8 @@ draw_ftof: true
 draw_pmt: true
 draw_beam: true
 draw_decay: true
+ftof_compress: true   # draw the forward arm near, with an axis break
+ftof_shift: 11700     # how far upstream to bring it, FF z [mm]
 # Element labels to suppress (matched against the tag text, subscript
 # markup stripped). Empty shows all labels.
 hide_labels: []

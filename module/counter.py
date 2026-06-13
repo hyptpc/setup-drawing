@@ -61,10 +61,17 @@ def draw_bht():
     ps.draw_tag('BHT', 4 * phi_e - 180, w + 20, 0, 5)
 
 #______________________________________________________________________________
+def _ftof_shift():
+  if getattr(cfg, 'ftof_compress', True):
+    return getattr(cfg, 'ftof_shift', 0)
+  return 0
+
+#______________________________________________________________________________
 def draw_cvc():
   # ps.comment('CVC')
   ps.comment('FTOF')
-  x, y = geom.ff_to_xy(13918)
+  s = _ftof_shift()
+  x, y = geom.ff_to_xy(13918 - s)
   n_seg = 34
   w = 100 / 2
   t = 30 / 2
@@ -94,7 +101,8 @@ def draw_kvc():
 #______________________________________________________________________________
 def draw_sac3():
   ps.comment('SAC3')
-  x, y = geom.ff_to_xy(14100)
+  s = _ftof_shift()
+  x, y = geom.ff_to_xy(14100 - s)
   w = 400 / 2
   t = 120 / 2
   n_pmt = 8
@@ -114,7 +122,8 @@ def draw_sac3():
 #______________________________________________________________________________
 def draw_sfv():
   ps.comment('SFV')
-  x, y = geom.ff_to_xy(14200)
+  s = _ftof_shift()
+  x, y = geom.ff_to_xy(14200 - s)
   n_seg = 6
   w = 70 / 2
   t = 10 / 2

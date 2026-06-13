@@ -67,11 +67,41 @@ def draw_scale():
 def draw_zaxis():
   ps.comment('Z axis')
   with ps.transform():
+    # upstream
     x, y = geom.ff_to_xy(-2000)
     ps.move_to_xy(0, 0)
     ps.line_to_xy(x, y, dash=[10, 5])
     ps.stroke()
-    x, y = geom.ff_to_xy(15000 if cfg.draw_ftof else 0)
+    if not cfg.draw_ftof:
+      return
+    # downstream straight axis to the forward arm. When compressed, the
+    # arm is shifted upstream by cfg.ftof_shift and a wavy break line
+    # (perpendicular to the axis) separates it from the SHS region.
+    compress = getattr(cfg, 'ftof_compress', True)
+    s = cfg.ftof_shift if compress else 0
+    z_end = 14309 - s                  # downstream end (SFV)
     ps.move_to_xy(0, 0)
-    ps.line_to_xy(x, y, dash=[10, 5])
+    ps.line_to_xy(*geom.ff_to_xy(z_end), dash=[10, 5])
     ps.stroke()
+    if compress:
+      draw_break_line(1400)
+
+#______________________________________________________________________________
+def draw_break_line(z, length=1100, amp=80, n_cycle=9):
+  ''' Long wavy line perpendicular to the beam axis at drawn FF z,
+  marking an omitted distance between the SHS region and the forward
+  arm. '''
+  rad = math.radians(geom.ff_angle)
+  dx, dy = -math.sin(rad), math.cos(rad)   # +z (axis) direction
+  px, py = math.cos(rad), math.sin(rad)    # perpendicular to the axis
+  cx, cy = geom.ff_to_xy(z)
+  n = 200
+  for i in range(n + 1):
+    t = -length + 2 * length * i / n
+    d = amp * math.sin(2 * math.pi * n_cycle * i / n)
+    x, y = cx + t * px + d * dx, cy + t * py + d * dy
+    if i == 0:
+      ps.move_to_xy(x, y)
+    else:
+      ps.line_to_xy(x, y)
+  ps.stroke()
